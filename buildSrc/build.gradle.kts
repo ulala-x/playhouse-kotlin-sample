@@ -21,5 +21,5 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-allopen:1.6.21")
 
     implementation("io.freefair.gradle:lombok-plugin:6.5.1")
-//    implementation("com.lifemmo.pl.base:plbase:1.0")
+//    implementation("org.ulalax.playhouse:plbase:1.0")
 }

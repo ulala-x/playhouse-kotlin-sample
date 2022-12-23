@@ -1,8 +1,8 @@
-package com.lifemmo.pl.simple.session
+package org.ulalax.playhouse.pl.simple.session
 
-import com.lifemmo.pl.base.communicator.CommonOption
-import com.lifemmo.pl.base.service.session.SessionOption
-import com.lifemmo.pl.base.service.session.SessionServer
+import org.ulalax.playhouse.communicator.CommonOption
+import org.ulalax.playhouse.service.session.SessionOption
+import org.ulalax.playhouse.service.session.SessionServer
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.boot.CommandLineRunner

@@ -3,17 +3,17 @@
  */
 
 plugins {
-    id("com.lifemmo.pl.base.kotlin-spring-application-conventions")
+    id("org.ulalax.playhouse.kotlin-spring-application-conventions")
     id("io.freefair.lombok")
 }
 
 dependencies {
     implementation(project(":simpleProtocol"))
-    implementation("com.lifemmo.pl.base:plbase:1.0")
+    implementation("org.ulalax.playhouse:playhouse:1.0")
 
 }
 
 //application {
 //    // Define the main class for the application.
-//    mainClass.set("com.lifemmo.pl.simple.api.app")
+//    mainClass.set("org.ulalax.playhouse.pl.simple.api.app")
 //}

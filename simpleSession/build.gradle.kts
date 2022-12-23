@@ -3,14 +3,14 @@
  */
 
 plugins {
-    id("com.lifemmo.pl.base.kotlin-spring-application-conventions")
+    id("org.ulalax.playhouse.kotlin-spring-application-conventions")
 }
 
 dependencies {
-    implementation("com.lifemmo.pl.base:plbase:1.0")
+    implementation("org.ulalax.playhouse:playhouse:1.0")
 }
 
 //application {
 //    // Define the main class for the application.
-//    mainClass.set("com.lifemmo.pl.base.app.App")
+//    mainClass.set("org.ulalax.playhouse.app.App")
 //}

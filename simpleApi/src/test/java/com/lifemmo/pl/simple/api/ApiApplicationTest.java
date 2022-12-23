@@ -1,4 +1,4 @@
-package com.lifemmo.pl.simple.api;
+package org.ulalax.playhouse.pl.simple.api;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

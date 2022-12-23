@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package com.lifemmo.pl.simple;
+package org.ulalax.playhouse.simple;
 
 
 message AuthenticateReq{

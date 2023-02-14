@@ -8,23 +8,23 @@ import org.apache.logging.log4j.kotlin.logger
 
 class RoomSystem(override val systemPanel: SystemPanel,override val baseSender: BaseSender) : ServerSystem {
     private val log = logger()
-    override fun onDispatch(packet: Packet) {
+    override suspend fun onDispatch(packet: Packet) {
         log.info("onDispatch : ${packet.msgName}")
     }
 
-    override fun onPause() {
+    override suspend fun onPause() {
         log.info("onPause")
     }
 
-    override fun onResume() {
+    override suspend fun onResume() {
         log.info("onResume")
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         log.info("onStart")
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         log.info("onStop")
     }
 }

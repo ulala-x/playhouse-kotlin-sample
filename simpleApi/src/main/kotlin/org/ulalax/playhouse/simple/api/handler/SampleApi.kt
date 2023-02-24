@@ -32,7 +32,7 @@ class SampleApi {
 
     @ApiHandler(msgName = "AuthenticateReq")
     fun authenticate(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
-        val req: AuthenticateReq = AuthenticateReq.parseFrom(packet.buffer())
+        val req: AuthenticateReq = AuthenticateReq.parseFrom(packet.data())
         val accountId: Long = req.userId
         log.info("authenticate: $accountId,${req.token}")
         apiSender.authenticate(accountId, accountId.toString())
@@ -42,14 +42,14 @@ class SampleApi {
 
     @ApiHandler(msgName = "HelloReq")
     fun hello(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
-        val req: HelloReq = HelloReq.parseFrom(packet.buffer())
+        val req: HelloReq = HelloReq.parseFrom(packet.data())
         log.info("hello:${req.message}, ${apiSender.sessionInfo()}" )
         apiSender.reply(ReplyPacket(HelloRes.newBuilder().setMessage("hello").build()))
     }
 
     @ApiHandler(msgName = "SessionUpdateMsg")
     fun SessionUpdateMsg(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
-        val msg: SessionUpdateMsg = SessionUpdateMsg.parseFrom(packet.buffer())
+        val msg: SessionUpdateMsg = SessionUpdateMsg.parseFrom(packet.data())
         log.info("SessionUpdateMsg:${msg.sessionInfo}")
         apiSender.updateSession(apiSender.serviceId(), msg.sessionInfo)
     }

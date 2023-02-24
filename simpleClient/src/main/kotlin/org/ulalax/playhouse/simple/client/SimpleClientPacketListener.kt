@@ -13,7 +13,7 @@ class SimpleClientPacketListener : ClientPacketListener {
         log.info("client onReceive:$serviceId, ${packet.msgName}")
 
         if(packet.msgName == ChatMsg.getDescriptor().name){
-            log.info("chat msg:${ChatMsg.parseFrom(packet.buffer()).data}")
+            log.info("chat msg:${ChatMsg.parseFrom(packet.data()).data}")
         }
     }
 }

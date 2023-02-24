@@ -13,12 +13,12 @@ import org.ulalax.playhouse.simple.Simple.*
 class ApiSystem(override val systemPanel: SystemPanel,override val baseSender: BaseSender) : ServerSystem {
     private val log = logger()
 
-    override fun onDispatch(packet: Packet) {
+    override suspend fun onDispatch(packet: Packet) {
         log.info("${packet.msgName} packet received")
 
         try {
             if (packet.msgName == HelloReq.getDescriptor().name) {
-                val data: String = HelloReq.parseFrom(packet.buffer()).message
+                val data: String = HelloReq.parseFrom(packet.data()).message
                 baseSender.reply(ReplyPacket(HelloRes.newBuilder().setMessage(data).build()))
             }
         } catch (e: Exception) {
@@ -26,19 +26,19 @@ class ApiSystem(override val systemPanel: SystemPanel,override val baseSender: B
         }
     }
 
-    override fun onPause() {
+    override suspend fun onPause() {
         log.info("onPause")
     }
 
-    override fun onResume() {
+    override suspend fun onResume() {
         log.info("onResume")
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         log.info("onStart")
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         log.info("onStop")
     }
 }

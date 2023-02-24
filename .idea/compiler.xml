@@ -7,8 +7,8 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar" />
         </processorPath>
-        <module name="plbase_test.simpleRoom.test" />
-        <module name="plbase_test.simpleApi.test" />
+        <module name="playhouse-test.simpleRoom.test" />
+        <module name="playhouse-test.simpleApi.test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -16,16 +16,16 @@
           <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/2.7.3/spring-boot-configuration-processor-2.7.3.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar" />
         </processorPath>
-        <module name="plbase_test.simpleApi.main" />
-        <module name="plbase_test.simpleRoom.main" />
+        <module name="playhouse-test.simpleApi.main" />
+        <module name="playhouse-test.simpleRoom.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/2.7.3/spring-boot-configuration-processor-2.7.3.jar" />
         </processorPath>
-        <module name="plbase_test.simpleClient.main" />
-        <module name="plbase_test.simpleSession.main" />
+        <module name="playhouse-test.simpleClient.main" />
+        <module name="playhouse-test.simpleSession.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11" />

@@ -6,7 +6,7 @@ import org.ulalax.playhouse.service.ServerSystem
 import org.ulalax.playhouse.service.SystemPanel
 import org.apache.logging.log4j.kotlin.logger
 
-class RoomSystem(override val systemPanel: SystemPanel,override val baseSender: BaseSender) : ServerSystem {
+class PlaySystem(override val systemPanel: SystemPanel, override val baseSender: BaseSender) : ServerSystem {
     private val log = logger()
     override suspend fun onDispatch(packet: Packet) {
         log.info("onDispatch : ${packet.msgName}")

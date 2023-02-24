@@ -18,7 +18,7 @@ class ClientApplication : CommandLineRunner {
     private val log = logger()
     override fun run(vararg args: String?) = runBlocking {
         try{
-            val connector = Connector(0, SimpleClientPacketListener())
+            val connector = Connector(0,true, SimpleClientPacketListener())
             connector.connect("127.0.0.1",30114)
 
             val apiSvcId="api"
@@ -27,13 +27,13 @@ class ClientApplication : CommandLineRunner {
             ///////// for api ///////////////////////
             var authenticateRes = connector.request(apiSvcId,
                 Packet(AuthenticateReq.newBuilder().setUserId(700).setToken("password").build())
-            ).let { AuthenticateRes.parseFrom(it.buffer()) }
+            ).let { AuthenticateRes.parseFrom(it.data()) }
 
             log.info(authenticateRes.userInfo)
 
             val helloRes = connector.request(apiSvcId,
                 Packet(HelloReq.newBuilder().setMessage("hi!").build())
-            ).let { HelloRes.parseFrom(it.buffer()) }
+            ).let { HelloRes.parseFrom(it.data()) }
 
             log.info(helloRes.message)
 
@@ -43,7 +43,7 @@ class ClientApplication : CommandLineRunner {
 
             val newSessionInfo = connector.request(apiSvcId,
                 Packet(SessionInfoReq.newBuilder().build())
-            ).let { SessionInfoRes.parseFrom(it.buffer()).sessionInfo }
+            ).let { SessionInfoRes.parseFrom(it.data()).sessionInfo }
 
             log.info("sessionInfo:$newSessionInfo")
 
@@ -56,7 +56,7 @@ class ClientApplication : CommandLineRunner {
             ///////// for api ///////////////////////
             authenticateRes = connector.request(apiSvcId,
                 Packet(AuthenticateReq.newBuilder().setUserId(700).setToken("password").build())
-            ).let { AuthenticateRes.parseFrom(it.buffer()) }
+            ).let { AuthenticateRes.parseFrom(it.data()) }
 
             log.info(authenticateRes.userInfo)
 
@@ -65,7 +65,7 @@ class ClientApplication : CommandLineRunner {
             var roomEndpoint: String
             connector.request(apiSvcId,Packet(CreateRoomReq.newBuilder().setData("success 1").build())
             ).let {
-                var res = CreateRoomRes.parseFrom(it.buffer())
+                var res = CreateRoomRes.parseFrom(it.data())
                 roomId = res.roomId
                 roomEndpoint = res.roomEndpoint
                 log.info("${it.msgName} res: error code:${it.errorCode}, data:${res.data}")
@@ -77,13 +77,13 @@ class ClientApplication : CommandLineRunner {
                     .setRoomId(roomId).setData("success 2")
                 .build())
             ).let {
-                var res = JoinRoomRes.parseFrom(it.buffer())
+                var res = JoinRoomRes.parseFrom(it.data())
                 log.info("${it.msgName} res: error code:${it.errorCode}, data:${res.data}")
             }
 
             connector.request(roomSvcId,Packet(LeaveRoomReq.newBuilder().setData("success 3").build())
             ).let {
-                var res = LeaveRoomRes.parseFrom(it.buffer())
+                var res = LeaveRoomRes.parseFrom(it.data())
                 log.info("${it.msgName} res: error code:${it.errorCode}, data:${res.data}")
             }
 
@@ -94,7 +94,7 @@ class ClientApplication : CommandLineRunner {
                     .setData("success 4")
                 .build())
             ).let {
-                var res = CreateJoinRoomRes.parseFrom(it.buffer())
+                var res = CreateJoinRoomRes.parseFrom(it.data())
                 log.info("${it.msgName} res: error code:${it.errorCode}, data:${res.data}")
             }
 

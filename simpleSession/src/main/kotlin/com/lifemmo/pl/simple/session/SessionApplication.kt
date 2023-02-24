@@ -28,6 +28,7 @@ class SessionApplication : CommandLineRunner {
             val sessionOption = SessionOption().apply {
                 this.sessionPort = 30114
                 this.clientSessionIdleTimeout = 0
+                this.useWebSocket = true
                 this.urls = arrayListOf("api:AuthenticateReq")
             }
 

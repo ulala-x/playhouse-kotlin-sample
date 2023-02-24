@@ -38,7 +38,7 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
 
     override suspend fun onCreate(packet: Packet): ReplyPacket {
         log.info("onCreate:${stageSender.stageType()},${stageSender.stageId()},${packet.msgName}")
-        val request = CreateRoomAsk.parseFrom(packet.buffer())
+        val request = CreateRoomAsk.parseFrom(packet.data())
         return ReplyPacket(CreateRoomAnswer.newBuilder().setData(request.data).build())
     }
 
@@ -50,7 +50,7 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
     override suspend fun onJoinStage(user: SimpleUser, packet: Packet): ReplyPacket {
 
         log.info("onJoinStage:${stageSender.stageType()},${stageSender.stageId()},${packet.msgName}")
-        val request = JoinRoomAsk.parseFrom(packet.buffer())
+        val request = JoinRoomAsk.parseFrom(packet.data())
         return ReplyPacket(JoinRoomAnswer.newBuilder().setData(request.data).build())
 
     }
@@ -68,7 +68,7 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
             Packet(HelloToApiReq.newBuilder().setData("hello").build())
         ).await()
 
-        log.info("deferred:${HelloToApiRes.parseFrom(deferred.buffer()).data}")
+        log.info("deferred:${HelloToApiRes.parseFrom(deferred.data()).data}")
 
 
     }
@@ -76,10 +76,10 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
     override suspend fun onDisconnect(user: SimpleUser) {
         log.info("onSessionClose:${stageSender.stageType()},${stageSender.stageId()},${user.accountId()}")
 
-        leaveRoom(user)
+        leaveStage(user)
     }
 
-    fun leaveRoom(user: SimpleUser) {
+    fun leaveStage(user: SimpleUser) {
         userMap.remove(user.accountId())
 
         log.info("leave room ${user.accountId()}, size:${userMap.size}")
@@ -89,7 +89,7 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
             stageSender.addCountTimer(Duration.ofSeconds(5),1,Duration.ofSeconds(5), suspend {
                 if(userMap.isEmpty()){
                     log.info("close room :${Thread.currentThread().id}")
-                    stageSender.closeRoom()
+                    stageSender.closeStage() //.closeStage()
                 }
             })
         }

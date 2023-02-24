@@ -10,7 +10,7 @@ import org.ulalax.playhouse.simple.room.SimpleUser
 class LeaveRoomCmd : PacketCmd<SimpleRoom, SimpleUser> {
     override suspend fun execute(room: SimpleRoom, user: SimpleUser, packet: Packet) {
 
-        val request = LeaveRoomReq.parseFrom(packet.buffer())
+        val request = LeaveRoomReq.parseFrom(packet.data())
 
         user.actorSender.sendToApi(
             user.accountId().toString(),
@@ -22,7 +22,7 @@ class LeaveRoomCmd : PacketCmd<SimpleRoom, SimpleUser> {
             )
         )
 
-        room.leaveRoom(user)
+        room.leaveStage(user)
         user.actorSender.leaveStage()
 
         room.stageSender.reply(ReplyPacket(LeaveRoomRes.newBuilder().setData(request.data).build()))

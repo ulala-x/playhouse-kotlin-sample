@@ -23,15 +23,15 @@ class RoomApplication : CommandLineRunner {
                 this.port = 30570
                 this.serviceId = "room"
                 this.redisPort = redisPort
-                this.serverSystem = {baseSender,systemSender -> RoomSystem(baseSender,systemSender) }
+                this.serverSystem = {baseSender,systemSender -> PlaySystem(baseSender,systemSender) }
             }
 
-            val PlayOption = PlayOption().apply {
+            val playOption = PlayOption().apply {
                 this.elementConfigurator.register("simple",
                     {stageSender -> SimpleRoom(stageSender) },{ userSender -> SimpleUser(userSender) })
             }
 
-            val roomServer = PlayServer(commonOption,PlayOption)
+            val roomServer = PlayServer(commonOption,playOption)
 
             roomServer.start()
 

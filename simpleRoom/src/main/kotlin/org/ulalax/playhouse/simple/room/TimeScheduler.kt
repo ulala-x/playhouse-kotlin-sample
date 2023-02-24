@@ -26,8 +26,8 @@ class TimeScheduler {
 
         try {
             var apiInfo = systemPanel.randomServerInfo("api")
-            var res = baseSender.requestToSystem(apiInfo.bindEndpoint, Packet(HelloReq.newBuilder().setMessage("hello").build()))
-            log.info(HelloRes.parseFrom(res.buffer()))
+            var res = baseSender.requestToSystem(apiInfo.bindEndpoint(), Packet(HelloReq.newBuilder().setMessage("hello").build()))
+            log.info(HelloRes.parseFrom(res.data()))
 
         }catch (e:Exception){
             log.error(ExceptionUtils.getStackTrace(e))

@@ -1,15 +1,16 @@
-package org.ulalax.playhouse.pl.simple.session
+package org.ulalax.playhouse.simple.session
 
-import org.ulalax.playhouse.protocol.Packet
-import org.ulalax.playhouse.service.BaseSender
 import org.ulalax.playhouse.service.ServerSystem
 import org.ulalax.playhouse.service.SystemPanel
 import org.apache.logging.log4j.kotlin.logger
+import org.ulalax.playhouse.communicator.message.Packet
+import org.ulalax.playhouse.service.Sender
 
-class SessionSystem(override val baseSender: BaseSender, override val systemPanel: SystemPanel) : ServerSystem {
-    val log = logger()
+class SessionSystem(override val systemPanel: SystemPanel,override val sender: Sender) : ServerSystem {
+
+    private val log = logger()
     override suspend fun onDispatch(packet: Packet) {
-        log.info("${packet.msgName} is received")
+        log.info("${packet.msgId} is received")
     }
 
     override suspend fun onPause() {

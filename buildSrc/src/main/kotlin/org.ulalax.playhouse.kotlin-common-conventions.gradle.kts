@@ -30,10 +30,16 @@ tasks {
     }
 }
 
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 
@@ -63,9 +69,10 @@ dependencies {
     implementation(Depend.commonLang3)
 
     // Use JUnit Jupiter for testing.
-    testImplementation(Depend.junitJupiter)
-    // https://mvnrepository.com/artifact/org.assertj/assertj-core
-    testImplementation("org.assertj:assertj-core:3.23.1")
+//    testImplementation(Depend.junitJupiter)
+//    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+//    testImplementation("org.assertj:assertj-core:3.23.1")
+    testImplementation("io.mockk:mockk:1.13.5")
 
 }
 

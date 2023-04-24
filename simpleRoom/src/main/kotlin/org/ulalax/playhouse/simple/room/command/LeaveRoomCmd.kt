@@ -1,7 +1,7 @@
-package org.ulalax.playhouse.pl.simple.room.command
+package org.ulalax.playhouse.simple.room.command
 
-import org.ulalax.playhouse.protocol.Packet
-import org.ulalax.playhouse.protocol.ReplyPacket
+import org.ulalax.playhouse.communicator.message.Packet
+import org.ulalax.playhouse.communicator.message.ReplyPacket
 import org.ulalax.playhouse.service.play.contents.PacketCmd
 import org.ulalax.playhouse.simple.Simple.*
 import org.ulalax.playhouse.simple.room.SimpleRoom
@@ -13,7 +13,6 @@ class LeaveRoomCmd : PacketCmd<SimpleRoom, SimpleUser> {
         val request = LeaveRoomReq.parseFrom(packet.data())
 
         user.actorSender.sendToApi(
-            user.accountId().toString(),
             Packet(
                 LeaveRoomNotify.newBuilder()
                     .setSessionEndpoint(user.actorSender.sessionEndpoint())

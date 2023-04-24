@@ -4,66 +4,67 @@ import lombok.extern.slf4j.Slf4j
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import org.ulalax.playhouse.protocol.Packet
-import org.ulalax.playhouse.protocol.ReplyPacket
-import org.ulalax.playhouse.service.ApiBaseSender
+import org.ulalax.playhouse.communicator.message.Packet
+import org.ulalax.playhouse.communicator.message.ReplyPacket
 import org.ulalax.playhouse.service.ApiSender
+import org.ulalax.playhouse.service.Sender
 import org.ulalax.playhouse.service.SystemPanel
-import org.ulalax.playhouse.service.api.annotation.Api
-import org.ulalax.playhouse.service.api.annotation.ApiHandler
-import org.ulalax.playhouse.service.api.annotation.Init
+import org.ulalax.playhouse.service.api.ApiService
+import org.ulalax.playhouse.service.api.BackendHandlerRegister
+import org.ulalax.playhouse.service.api.HandlerRegister
 import org.ulalax.playhouse.simple.Simple.*
+import org.ulalax.playhouse.simple.api.SpringContext
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Slf4j
 @Component
-@Api
-class SampleApi {
-    private var systemPanel: SystemPanel? = null
-    private var apiBaseSender: ApiBaseSender? = null
+class SampleApi : ApiService {
+    private lateinit var systemPanel: SystemPanel
+    private lateinit var sender: Sender
     private val log = logger()
 
-    @Init
-    fun init(systemPanel: SystemPanel?, apiBaseSender: ApiBaseSender?) {
+
+    override suspend fun init(systemPanel: SystemPanel, sender: Sender) {
         this.systemPanel = systemPanel
-        this.apiBaseSender = apiBaseSender
+        this.sender = sender
     }
 
-    @ApiHandler(msgName = "AuthenticateReq")
-    fun authenticate(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
+    override fun instance(): ApiService {
+        return SpringContext.getContext().getBean(this::class.java)
+    }
+
+    override fun handles(register: HandlerRegister,backendHandlerRegister: BackendHandlerRegister) {
+        register.add(AuthenticateReq.getDescriptor().index,::authenticate)
+        register.add(HelloReq.getDescriptor().index,::hello)
+        register.add(CloseSessionMsg.getDescriptor().index,::closeSessionMsg)
+        register.add(SendMsg.getDescriptor().index,::sendMessage)
+    }
+
+    fun authenticate(packet: Packet, apiSender: ApiSender) {
         val req: AuthenticateReq = AuthenticateReq.parseFrom(packet.data())
         val accountId: Long = req.userId
         log.info("authenticate: $accountId,${req.token}")
-        apiSender.authenticate(accountId, accountId.toString())
+        apiSender.authenticate(accountId)
         val message: AuthenticateRes = AuthenticateRes.newBuilder().setUserInfo(accountId.toString()).build()
         apiSender.reply(ReplyPacket(message))
     }
 
-    @ApiHandler(msgName = "HelloReq")
-    fun hello(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
+    fun hello(packet: Packet, apiSender: ApiSender) {
         val req: HelloReq = HelloReq.parseFrom(packet.data())
-        log.info("hello:${req.message}, ${apiSender.sessionInfo()}" )
+        log.info("hello:${req.message}, ${apiSender.accountId}" )
         apiSender.reply(ReplyPacket(HelloRes.newBuilder().setMessage("hello").build()))
     }
 
-    @ApiHandler(msgName = "SessionUpdateMsg")
-    fun SessionUpdateMsg(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
-        val msg: SessionUpdateMsg = SessionUpdateMsg.parseFrom(packet.data())
-        log.info("SessionUpdateMsg:${msg.sessionInfo}")
-        apiSender.updateSession(apiSender.serviceId(), msg.sessionInfo)
+    fun sendMessage(packet:Packet,apiSender: ApiSender){
+        val recv = SendMsg.parseFrom(packet.data())
+        log.info("message:${recv.message}")
+        apiSender.sendToClient(Packet(SendMsg.getDescriptor().index,packet.movePayload()))
     }
 
-    @ApiHandler(msgName = "SessionInfoReq")
-    fun SessionInfoReq(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
-        log.info("SessionInfoReq:${sessionInfo}")
-        apiSender.reply(ReplyPacket(SessionInfoRes.newBuilder().setSessionInfo(sessionInfo).build()))
-    }
-
-    @ApiHandler(msgName = "CloseSessionMsg")
-    fun CloseSessionMsg(sessionInfo: String, packet: Packet, apiSender: ApiSender) {
+    fun closeSessionMsg( packet: Packet, apiSender: ApiSender) {
         apiSender.sendToClient(Packet(CloseSessionMsg.newBuilder().build()))
-        apiSender.sessionClose(apiSender.sessionEndpoint(), apiSender.sid())
+        apiSender.sessionClose(apiSender.sessionEndpoint, apiSender.sid)
     }
 
     @Scheduled(fixedRate = 5000)
@@ -74,4 +75,6 @@ class SampleApi {
     companion object {
         private val dateFormat = SimpleDateFormat("HH:mm:ss")
     }
+
+
 }

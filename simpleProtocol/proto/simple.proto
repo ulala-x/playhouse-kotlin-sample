@@ -20,15 +20,8 @@ message HelloRes{
   string message = 1;
 }
 
-message SessionUpdateMsg{
-  string sessionInfo = 1;
-}
-
-message SessionInfoReq {
-}
-
-message SessionInfoRes {
-  string sessionInfo = 1;
+message SendMsg{
+  string message = 1;
 }
 
 message CloseSessionMsg{
@@ -39,7 +32,7 @@ message CreateRoomReq{
   string data = 1;
 }
 message CreateRoomRes{
-  int64 room_id = 1;
+  int64 stage_id = 1;
   string data = 2;
   string roomEndpoint = 3;
 }
@@ -50,7 +43,8 @@ message JoinRoomReq{
   string data = 4;
 }
 message JoinRoomRes{
-  string data = 1;
+  int32 stage_idx = 1;
+  string data = 2;
 }
 
 message CreateJoinRoomReq {
@@ -60,7 +54,8 @@ message CreateJoinRoomReq {
   string data = 4;
 }
 message CreateJoinRoomRes {
-  string data = 1;
+  int32 stage_idx = 1;
+  string data = 2;
 }
 
 message LeaveRoomNotify{

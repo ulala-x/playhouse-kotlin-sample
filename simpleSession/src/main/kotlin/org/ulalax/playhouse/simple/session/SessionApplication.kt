@@ -8,6 +8,10 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.ulalax.playhouse.protocol.Server.AuthenticateMsg
+import org.ulalax.playhouse.simple.Simple
+import org.ulalax.playhouse.simple.Simple.*
+import org.ulalax.playhouse.simple.session.SessionSystem
 import kotlin.system.exitProcess
 
 @SpringBootApplication
@@ -17,11 +21,15 @@ class SessionApplication : CommandLineRunner {
         try{
             val redisPort = 6379
 
+            val sessionSvcId:Short = 1
+            val apiSvcId:Short = 2
+            val playSvcId:Short = 3
+
             val commonOption = CommonOption().apply {
                 this.port = 30370
-                this.serviceId = "session"
+                this.serviceId = sessionSvcId
                 this.redisPort = redisPort
-                this.serverSystem = {baseSender,systemSender -> SessionSystem(systemSender,baseSender)}
+                this.serverSystem = {systemPanel,sender -> SessionSystem(systemPanel,sender) }
                 this.requestTimeoutSec = 0
             }
 
@@ -29,7 +37,7 @@ class SessionApplication : CommandLineRunner {
                 this.sessionPort = 30114
                 this.clientSessionIdleTimeout = 0
                 this.useWebSocket = true
-                this.urls = arrayListOf("api:AuthenticateReq")
+                this.urls = arrayListOf("$apiSvcId:${AuthenticateReq.getDescriptor().index}")
             }
 
             val sessionServer = SessionServer(commonOption,sessionOption)

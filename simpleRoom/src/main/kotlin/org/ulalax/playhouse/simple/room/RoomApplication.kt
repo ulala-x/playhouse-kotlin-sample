@@ -21,7 +21,7 @@ class RoomApplication : CommandLineRunner {
 
             val commonOption = CommonOption().apply {
                 this.port = 30570
-                this.serviceId = "room"
+                this.serviceId = 3
                 this.redisPort = redisPort
                 this.serverSystem = {baseSender,systemSender -> PlaySystem(baseSender,systemSender) }
             }

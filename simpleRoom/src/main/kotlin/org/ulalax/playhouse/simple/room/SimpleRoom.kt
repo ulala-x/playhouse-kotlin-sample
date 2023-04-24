@@ -1,12 +1,12 @@
 package org.ulalax.playhouse.simple.room
 
-import org.ulalax.playhouse.protocol.Packet
-import org.ulalax.playhouse.protocol.ReplyPacket
 import org.ulalax.playhouse.service.StageSender
-import org.ulalax.playhouse.pl.simple.room.command.LeaveRoomCmd
+import org.ulalax.playhouse.simple.room.command.LeaveRoomCmd
 import org.apache.logging.log4j.kotlin.logger
+import org.ulalax.playhouse.communicator.message.Packet
+import org.ulalax.playhouse.communicator.message.ReplyPacket
+import org.ulalax.playhouse.service.TimerCallback
 import org.ulalax.playhouse.service.play.Stage
-import org.ulalax.playhouse.service.play.base.TimerCallback
 import org.ulalax.playhouse.service.play.contents.PacketHandler
 import org.ulalax.playhouse.simple.Simple.*
 import org.ulalax.playhouse.simple.room.command.ChatMsgCmd
@@ -26,8 +26,8 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
 
 
     init {
-        packetHandler.add(LeaveRoomReq.getDescriptor().name,LeaveRoomCmd())
-        packetHandler.add(ChatMsg.getDescriptor().name, ChatMsgCmd())
+        packetHandler.add(LeaveRoomReq.getDescriptor().index, LeaveRoomCmd())
+        packetHandler.add(ChatMsg.getDescriptor().index, ChatMsgCmd())
 
         stageSender.addCountTimer(Duration.ofSeconds(3),3, Duration.ofSeconds(1), countTimer)
         stageSender.addRepeatTimer(Duration.ZERO, Duration.ofMillis(200), suspend{
@@ -37,34 +37,33 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
 
 
     override suspend fun onCreate(packet: Packet): ReplyPacket {
-        log.info("onCreate:${stageSender.stageType()},${stageSender.stageId()},${packet.msgName}")
+        log.info("onCreate:${stageSender.stageType},${stageSender.stageId},${packet.msgId}")
         val request = CreateRoomAsk.parseFrom(packet.data())
         return ReplyPacket(CreateRoomAnswer.newBuilder().setData(request.data).build())
     }
 
     override suspend fun onDispatch(user: SimpleUser, packet: Packet) {
-        log.info("onDispatch:${stageSender.stageType()},${stageSender.stageId()},${packet.msgName}")
+        log.info("onDispatch:${stageSender.stageType},${stageSender.stageId},${packet.msgId}")
         packetHandler.dispatch(this, user ,packet)
     }
 
     override suspend fun onJoinStage(user: SimpleUser, packet: Packet): ReplyPacket {
 
-        log.info("onJoinStage:${stageSender.stageType()},${stageSender.stageId()},${packet.msgName}")
+        log.info("onJoinStage:${stageSender.stageType},${stageSender.stageId},${packet.msgId}")
         val request = JoinRoomAsk.parseFrom(packet.data())
         return ReplyPacket(JoinRoomAnswer.newBuilder().setData(request.data).build())
 
     }
 
     override suspend fun onPostCreate() {
-        log.info("onPostCreate:${stageSender.stageType()},${stageSender.stageId()}")
+        log.info("onPostCreate:${stageSender.stageType},${stageSender.stageId}")
 
     }
 
     override suspend fun onPostJoinStage(user: SimpleUser) {
         userMap[user.accountId()] = user
-        log.info("onPostJoinStage:${stageSender.stageType()},${stageSender.stageId()},${user.accountId()}")
+        log.info("onPostJoinStage:${stageSender.stageType},${stageSender.stageId},${user.accountId()}")
         val deferred = user.actorSender.asyncToApi(
-            user.accountId().toString(),
             Packet(HelloToApiReq.newBuilder().setData("hello").build())
         ).await()
 
@@ -74,7 +73,7 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
     }
 
     override suspend fun onDisconnect(user: SimpleUser) {
-        log.info("onSessionClose:${stageSender.stageType()},${stageSender.stageId()},${user.accountId()}")
+        log.info("onSessionClose:${stageSender.stageType},${stageSender.stageId},${user.accountId()}")
 
         leaveStage(user)
     }

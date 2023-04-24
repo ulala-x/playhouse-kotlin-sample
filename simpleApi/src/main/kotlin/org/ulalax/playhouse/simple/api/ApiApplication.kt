@@ -25,14 +25,12 @@ class ApiApplication : CommandLineRunner {
             val commonOption = CommonOption()
             commonOption.serverSystem = { systemPanel ,baseSender -> ApiSystem(systemPanel, baseSender) }
             commonOption.port = 30470
-            commonOption.serviceId = "api"
+            commonOption.serviceId = 1
             commonOption.redisPort = 6379
             commonOption.requestTimeoutSec = 0
             val apiOption = ApiOption()
             apiOption.apiPath = ApiApplication::class.java.getPackage().name
-            apiOption.applicationContext = SpringContext.getContext()
             apiOption.apiCallBackHandler = DisconnectApi()
-            apiOption.executorService = Executors.newFixedThreadPool(200)
             val apiServer = ApiServer(commonOption, apiOption)
             apiServer.start()
             Runtime.getRuntime().addShutdownHook(Thread {

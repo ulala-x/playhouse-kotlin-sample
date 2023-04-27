@@ -5,7 +5,7 @@
 
 plugins {
     // Apply the java Plugin to add support for Java.
-    id("org.jetbrains.kotlin.jvm")
+    kotlin("jvm")  // Kotlin version to use
 //    java
     `maven-publish`
 //    id("io.freefair.lombok")
@@ -19,18 +19,6 @@ repositories {
 }
 
 
-tasks {
-    val sourcesJar by creating(Jar::class) {
-        archiveClassifier.set("sources")
-        from(kotlin.sourceSets.getByName("main").kotlin.srcDirs)
-    }
-
-    artifacts {
-        archives(sourcesJar)
-    }
-}
-
-
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         jvmTarget = "17"
@@ -40,6 +28,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets.main {
+    java.srcDirs("src/main/Java", "src/main/Kotlin")
+}
+
+
+java {
+    withSourcesJar()
 }
 
 
@@ -58,7 +55,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     // https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.1")
-
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+//    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
+//    implementation("org.apache.logging.log4j:log4j-api:2.20.0")
+//    implementation("org.apache.logging.log4j:log4j-api-kotlin:1.2.0")
+//
 
 
     implementation(Depend.protoBuf)

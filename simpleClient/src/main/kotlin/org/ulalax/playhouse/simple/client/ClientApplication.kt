@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.ulalax.playhouse.client.network.message.Packet
 import org.ulalax.playhouse.simple.Simple.*
+import java.lang.System.exit
 import java.lang.Thread.sleep
 import kotlin.system.exitProcess
 
@@ -18,7 +19,7 @@ class ClientApplication : CommandLineRunner {
     private val log = logger()
     override fun run(vararg args: String?) = runBlocking {
         try{
-            val connector = Connector(0,true, SimpleApiPacketListener(),SimpleStagePacketListener())
+            val connector = Connector(0,false, SimpleApiPacketListener(),SimpleStagePacketListener())
             connector.connect("127.0.0.1",30114)
 
             val apiSvcId:Short = 2
@@ -27,13 +28,26 @@ class ClientApplication : CommandLineRunner {
             ///////// for api ///////////////////////
             var authenticateRes = connector.requestToApi(apiSvcId,
                 Packet(AuthenticateReq.newBuilder().setUserId(700).setToken("password").build())
-            ).let { AuthenticateRes.parseFrom(it.data()) }
+            ).let {
+                if(!it.isSuccess()){
+                    log.error("request is not success error:${it.errorCode}")
+                    exitProcess(0)
+                }
+                AuthenticateRes.parseFrom(it.data())
+            }
+
 
             log.info(authenticateRes.userInfo)
 
             val helloRes = connector.requestToApi(apiSvcId,
                 Packet(HelloReq.newBuilder().setMessage("hi!").build())
-            ).let { HelloRes.parseFrom(it.data()) }
+            ).let {
+                if(!it.isSuccess()){
+                    log.error("request is not success error:${it.errorCode}")
+                    exitProcess(0)
+                }
+                HelloRes.parseFrom(it.data())
+            }
 
             log.info(helloRes.message)
 
@@ -51,7 +65,13 @@ class ClientApplication : CommandLineRunner {
             ///////// for api ///////////////////////
             authenticateRes = connector.requestToApi(apiSvcId,
                 Packet(AuthenticateReq.newBuilder().setUserId(700).setToken("password").build())
-            ).let { AuthenticateRes.parseFrom(it.data()) }
+            ).let {
+                if(!it.isSuccess()){
+                    log.error("request is not success error:${it.errorCode}")
+                    exitProcess(0)
+                }
+                AuthenticateRes.parseFrom(it.data())
+            }
 
             log.info(authenticateRes.userInfo)
 
@@ -61,37 +81,57 @@ class ClientApplication : CommandLineRunner {
             var stageIndex :Int
             connector.requestToApi(apiSvcId,Packet(CreateRoomReq.newBuilder().setData("success 1").build())
             ).let {
-                var res = CreateRoomRes.parseFrom(it.data())
+                if(!it.isSuccess()){
+                    log.error("request is not success error:${it.errorCode}")
+                    exitProcess(0)
+                }
+
+                val res = CreateRoomRes.parseFrom(it.data())
                 stageId = res.stageId
-                roomEndpoint = res.roomEndpoint
-                log.info("${it.msgId} res: error code:${it.errorCode}, data:${res.data}")
+                roomEndpoint = res.playEndpoint
+                log.info("${it.msgId} res: error code:${it.errorCode},stageId:$stageId, data:${res.data}")
             }
 
             connector.requestToApi(apiSvcId,Packet(
                 JoinRoomReq.newBuilder()
-                    .setRoomEndpoint(roomEndpoint)
+                    .setPlayEndpoint(roomEndpoint)
                     .setRoomId(stageId).setData("success 2")
                 .build())
             ).let {
-                var res = JoinRoomRes.parseFrom(it.data())
+                if(!it.isSuccess()){
+                    log.error("request is not success error:${it.errorCode}")
+                    exitProcess(0)
+                }
+
+                val res = JoinRoomRes.parseFrom(it.data())
                 stageIndex = res.stageIdx
-                log.info("${it.msgId} res: error code:${it.errorCode}, data:${res.data}")
+                log.info("${it.msgId} res: error code:${it.errorCode},stageIndex:$stageIndex, data:${res.data}")
             }
 
             connector.requestToStage(roomSvcId,stageIndex,Packet(LeaveRoomReq.newBuilder().setData("success 3").build())
             ).let {
-                var res = LeaveRoomRes.parseFrom(it.data())
+                if(!it.isSuccess()){
+                    log.error("request is not success error:${it.errorCode}")
+                    exitProcess(0)
+                }
+
+                val res = LeaveRoomRes.parseFrom(it.data())
                 log.info("${it.msgId} res: error code:${it.errorCode}, data:${res.data}")
             }
 
             connector.requestToApi(apiSvcId,Packet(
                 CreateJoinRoomReq.newBuilder()
-                    .setRoomEndpoint(roomEndpoint)
+                    .setPlayEndpoint(roomEndpoint)
                     .setRoomId(stageId)
                     .setData("success 4")
                 .build())
             ).let {
-                var res = CreateJoinRoomRes.parseFrom(it.data())
+                if(!it.isSuccess()){
+                    log.error("request is not success error:${it.errorCode}")
+                    exitProcess(0)
+                }
+
+                val res = CreateJoinRoomRes.parseFrom(it.data())
                 log.info("${it.msgId} res: error code:${it.errorCode}, data:${res.data}")
             }
 

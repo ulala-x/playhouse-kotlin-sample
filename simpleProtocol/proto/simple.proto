@@ -34,10 +34,10 @@ message CreateRoomReq{
 message CreateRoomRes{
   int64 stage_id = 1;
   string data = 2;
-  string roomEndpoint = 3;
+  string playEndpoint = 3;
 }
 message JoinRoomReq{
-  string roomEndpoint = 1;
+  string playEndpoint = 1;
   int64 room_id = 2;
   int64 user_id = 3;
   string data = 4;
@@ -48,7 +48,7 @@ message JoinRoomRes{
 }
 
 message CreateJoinRoomReq {
-  string roomEndpoint = 1;
+  string playEndpoint = 1;
   int64 room_id = 2;
   int64 user_id = 3;
   string data = 4;

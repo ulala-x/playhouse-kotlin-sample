@@ -1,6 +1,5 @@
 package org.ulalax.playhouse.simple.api.handler
 
-import lombok.extern.slf4j.Slf4j
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -17,7 +16,6 @@ import org.ulalax.playhouse.simple.api.SpringContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-@Slf4j
 @Component
 class SampleApi : ApiService {
     private lateinit var systemPanel: SystemPanel
@@ -34,43 +32,44 @@ class SampleApi : ApiService {
         return SpringContext.getContext().getBean(this::class.java)
     }
 
-    override fun handles(register: HandlerRegister,backendHandlerRegister: BackendHandlerRegister) {
+    override fun handles(register: HandlerRegister,backendRegister: BackendHandlerRegister) {
         register.add(AuthenticateReq.getDescriptor().index,::authenticate)
         register.add(HelloReq.getDescriptor().index,::hello)
         register.add(CloseSessionMsg.getDescriptor().index,::closeSessionMsg)
         register.add(SendMsg.getDescriptor().index,::sendMessage)
     }
 
-    fun authenticate(packet: Packet, apiSender: ApiSender) {
+    suspend fun authenticate(packet: Packet, apiSender: ApiSender) {
         val req: AuthenticateReq = AuthenticateReq.parseFrom(packet.data())
         val accountId: Long = req.userId
-        log.info("authenticate: $accountId,${req.token}")
+        log.info("authenticate: accountId:$accountId,token:${req.token},sid:${apiSender.sid}")
         apiSender.authenticate(accountId)
         val message: AuthenticateRes = AuthenticateRes.newBuilder().setUserInfo(accountId.toString()).build()
         apiSender.reply(ReplyPacket(message))
     }
 
-    fun hello(packet: Packet, apiSender: ApiSender) {
+    suspend fun hello(packet: Packet, apiSender: ApiSender) {
         val req: HelloReq = HelloReq.parseFrom(packet.data())
-        log.info("hello:${req.message}, ${apiSender.accountId}" )
+        log.info("hello:${req.message},accountId:${apiSender.accountId},sessionEndpoint:${apiSender.sessionEndpoint},sid:${apiSender.sid}")
         apiSender.reply(ReplyPacket(HelloRes.newBuilder().setMessage("hello").build()))
     }
 
-    fun sendMessage(packet:Packet,apiSender: ApiSender){
+    suspend fun sendMessage(packet:Packet,apiSender: ApiSender){
         val recv = SendMsg.parseFrom(packet.data())
-        log.info("message:${recv.message}")
+        log.info("message:${recv.message},accountId:${apiSender.accountId},sessionEndpoint:${apiSender.sessionEndpoint},sid:${apiSender.sid}")
         apiSender.sendToClient(Packet(SendMsg.getDescriptor().index,packet.movePayload()))
     }
 
-    fun closeSessionMsg( packet: Packet, apiSender: ApiSender) {
+    suspend fun closeSessionMsg( packet: Packet, apiSender: ApiSender) {
+        log.info("closeSessionMsg - accountId:${apiSender.accountId},sessionEndpoint:${apiSender.sessionEndpoint},sid:${apiSender.sid}")
         apiSender.sendToClient(Packet(CloseSessionMsg.newBuilder().build()))
         apiSender.sessionClose(apiSender.sessionEndpoint, apiSender.sid)
     }
 
-    @Scheduled(fixedRate = 5000)
-    fun reportCurrentTime() {
-        log.info("The time is now ${dateFormat.format(Date())}")
-    }
+//    @Scheduled(fixedRate = 5000)
+//    fun reportCurrentTime() {
+//        log.info("The time is now ${dateFormat.format(Date())}")
+//    }
 
     companion object {
         private val dateFormat = SimpleDateFormat("HH:mm:ss")

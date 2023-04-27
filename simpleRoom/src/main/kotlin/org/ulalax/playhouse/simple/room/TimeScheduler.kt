@@ -26,12 +26,12 @@ class TimeScheduler {
 
     @Scheduled(fixedRate = 5000, initialDelay = 10000)
     fun reportCurrentTime() = runBlocking {
-        log.info("The time is now ${dateFormat.format(Date())}")
+//        log.info("The time is now ${dateFormat.format(Date())}")
 
         try {
-            var apiInfo = systemPanel.getServerInfoByService(apiSvcId)
-            var res = baseSender.requestToSystem(apiInfo.bindEndpoint(), Packet(HelloReq.newBuilder().setMessage("hello").build()))
-            log.info(HelloRes.parseFrom(res.data()))
+          //  var apiInfo = systemPanel.getServerInfoByService(apiSvcId)
+            //var res = baseSender.requestToSystem(apiInfo.bindEndpoint(), Packet(HelloReq.newBuilder().setMessage("hello").build()))
+            //log.info(HelloRes.parseFrom(res.data()))
 
         }catch (e:Exception){
             log.error(ExceptionUtils.getStackTrace(e))

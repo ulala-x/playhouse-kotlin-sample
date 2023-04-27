@@ -1,5 +1,6 @@
 package org.ulalax.playhouse.simple.api;
 
+import ConsoleLogger
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.boot.CommandLineRunner
@@ -25,9 +26,10 @@ class ApiApplication : CommandLineRunner {
             val commonOption = CommonOption()
             commonOption.serverSystem = { systemPanel ,baseSender -> ApiSystem(systemPanel, baseSender) }
             commonOption.port = 30470
-            commonOption.serviceId = 1
+            commonOption.serviceId = 2
             commonOption.redisPort = 6379
             commonOption.requestTimeoutSec = 0
+            commonOption.logger = ConsoleLogger()
             val apiOption = ApiOption()
             apiOption.apiPath = ApiApplication::class.java.getPackage().name
             apiOption.apiCallBackHandler = DisconnectApi()

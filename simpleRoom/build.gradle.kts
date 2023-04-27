@@ -4,7 +4,6 @@
 
 plugins {
     id("org.ulalax.playhouse.kotlin-spring-application-conventions")
-    id("io.freefair.lombok")
 }
 
 dependencies {

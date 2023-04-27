@@ -26,11 +26,12 @@ configurations {
     }
 }
 
+
 dependencies{
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter
     implementation("org.springframework.boot:spring-boot-starter")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("org.springframework.boot:spring-boot-starter-log4j2")
+//    implementation("org.springframework.boot:spring-boot-starter-log4j2")
 //    implementation("org.ulalax.playhouse:plbase")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

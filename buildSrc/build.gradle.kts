@@ -13,13 +13,15 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+   //implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.22")
+
     implementation("com.google.protobuf:protobuf-gradle-plugin:0.8.19")
 
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:2.7.3")
-    implementation("io.spring.gradle:dependency-management-plugin:1.0.13.RELEASE")
-    implementation("org.jetbrains.kotlin:kotlin-allopen:1.6.21")
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.0.6")
+    implementation("io.spring.gradle:dependency-management-plugin:1.1.0")
+   //implementation("org.jetbrains.kotlin:kotlin-allopen:1.8.20")
+// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-allopen
+    implementation("org.jetbrains.kotlin:kotlin-allopen:1.7.22")
 
-    implementation("io.freefair.gradle:lombok-plugin:6.5.1")
-//    implementation("org.ulalax.playhouse:plbase:1.0")
 }

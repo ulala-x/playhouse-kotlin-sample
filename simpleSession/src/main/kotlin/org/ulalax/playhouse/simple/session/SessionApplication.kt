@@ -1,5 +1,6 @@
 package org.ulalax.playhouse.pl.simple.session
 
+import ConsoleLogger
 import org.ulalax.playhouse.communicator.CommonOption
 import org.ulalax.playhouse.service.session.SessionOption
 import org.ulalax.playhouse.service.session.SessionServer
@@ -31,12 +32,13 @@ class SessionApplication : CommandLineRunner {
                 this.redisPort = redisPort
                 this.serverSystem = {systemPanel,sender -> SessionSystem(systemPanel,sender) }
                 this.requestTimeoutSec = 0
+                this.logger = ConsoleLogger()
             }
 
             val sessionOption = SessionOption().apply {
                 this.sessionPort = 30114
                 this.clientSessionIdleTimeout = 0
-                this.useWebSocket = true
+                this.useWebSocket = false
                 this.urls = arrayListOf("$apiSvcId:${AuthenticateReq.getDescriptor().index}")
             }
 

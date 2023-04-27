@@ -1,5 +1,6 @@
 package org.ulalax.playhouse.simple.room
 
+import ConsoleLogger
 import org.ulalax.playhouse.communicator.CommonOption
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.logging.log4j.kotlin.logger
@@ -24,6 +25,8 @@ class RoomApplication : CommandLineRunner {
                 this.serviceId = 3
                 this.redisPort = redisPort
                 this.serverSystem = {baseSender,systemSender -> PlaySystem(baseSender,systemSender) }
+                this.logger = ConsoleLogger()
+                this.requestTimeoutSec = 0
             }
 
             val playOption = PlayOption().apply {

@@ -21,7 +21,7 @@ class LeaveRoomCmd : PacketCmd<SimpleRoom, SimpleUser> {
             )
         )
 
-        room.leaveStage(user)
+        room.leaveRoom(user)
         user.actorSender.leaveStage()
 
         room.stageSender.reply(ReplyPacket(LeaveRoomRes.newBuilder().setData(request.data).build()))

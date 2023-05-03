@@ -73,12 +73,12 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
     }
 
     override suspend fun onDisconnect(user: SimpleUser) {
-        log.info("onSessionClose:${stageSender.stageType},${stageSender.stageId},${user.accountId()}")
+        log.info("onDisconnect:${stageSender.stageType},${stageSender.stageId},${user.accountId()}")
 
-        leaveStage(user)
+        leaveRoom(user)
     }
 
-    fun leaveStage(user: SimpleUser) {
+    fun leaveRoom(user: SimpleUser) {
         userMap.remove(user.accountId())
 
         log.info("leave room ${user.accountId()}, size:${userMap.size}")

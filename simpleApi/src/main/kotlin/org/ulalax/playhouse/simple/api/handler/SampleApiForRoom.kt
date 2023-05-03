@@ -1,5 +1,6 @@
 package org.ulalax.playhouse.simple.api.handler
 
+import com.google.protobuf.Descriptors.Descriptor
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Component
 import org.ulalax.playhouse.communicator.message.Packet
@@ -43,7 +44,7 @@ class SampleApiForRoom : ApiService {
 
     suspend fun createStage(packet: Packet, apiSender: ApiSender) {
         log.info("CreateRoom : accountId:${apiSender.accountId}," +
-                "msgName:${getDescriptor().messageTypes.find { it.index == packet.msgId }!!.name}")
+                "msgName:${ getDescriptor().messageTypes.find { it.index == packet.msgId }!!.name}")
 
         val data: String = CreateRoomReq.parseFrom(packet.data()).data
         val randRoomServerInfo = systemPanel.getServerInfoByService(roomServiceId)

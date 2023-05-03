@@ -8,7 +8,7 @@ plugins {
 
 dependencies {
     implementation(project(":simpleProtocol"))
-    implementation("org.ulalax.playhouse:playhouse:1.0")
+    implementation("org.ulalax.playhouse:playhouse:0.1")
 
 }
 

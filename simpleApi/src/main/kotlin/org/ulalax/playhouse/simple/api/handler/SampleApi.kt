@@ -13,7 +13,6 @@ import org.ulalax.playhouse.service.api.BackendHandlerRegister
 import org.ulalax.playhouse.service.api.HandlerRegister
 import org.ulalax.playhouse.simple.Simple.*
 import org.ulalax.playhouse.simple.api.SpringContext
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Component
@@ -71,9 +70,6 @@ class SampleApi : ApiService {
 //        log.info("The time is now ${dateFormat.format(Date())}")
 //    }
 
-    companion object {
-        private val dateFormat = SimpleDateFormat("HH:mm:ss")
-    }
 
 
 }

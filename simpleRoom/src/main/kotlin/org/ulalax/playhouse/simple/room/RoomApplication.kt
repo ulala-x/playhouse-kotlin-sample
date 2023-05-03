@@ -24,7 +24,7 @@ class RoomApplication : CommandLineRunner {
                 this.port = 30570
                 this.serviceId = 3
                 this.redisPort = redisPort
-                this.serverSystem = {baseSender,systemSender -> PlaySystem(baseSender,systemSender) }
+                this.serverSystem = {systemPanel,sender -> PlaySystem(systemPanel,sender) }
                 this.logger = ConsoleLogger()
                 this.requestTimeoutSec = 0
             }
@@ -34,21 +34,21 @@ class RoomApplication : CommandLineRunner {
                     {stageSender -> SimpleRoom(stageSender) },{ userSender -> SimpleUser(userSender) })
             }
 
-            val roomServer = PlayServer(commonOption,playOption)
+            val playServer = PlayServer(commonOption,playOption)
 
-            roomServer.start()
+            playServer.start()
 
             Runtime.getRuntime().addShutdownHook(object:Thread(){
                 override fun run() {
                     log.info("*** shutting down Room server since JVM is shutting down")
-                    roomServer.stop()
+                    playServer.stop()
                     log.info("*** server shutdown")
                     sleep(1000)
                 }
             })
 
             log.info("Room Server Started")
-            roomServer.awaitTermination()
+            playServer.awaitTermination()
 
         }catch (e:Exception){
             log.error(ExceptionUtils.getStackTrace(e))

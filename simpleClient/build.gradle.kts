@@ -9,7 +9,7 @@ plugins {
 dependencies {
     implementation(project(":simpleProtocol"))
     implementation("org.apache.commons:commons-text")
-    implementation("org.ulalax.playhouse:clientConnector:1.0")
+    implementation("org.ulalax.playhouse:clientConnector:0.1")
 
 
 }

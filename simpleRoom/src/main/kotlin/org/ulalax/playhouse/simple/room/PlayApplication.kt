@@ -14,7 +14,7 @@ import kotlin.system.exitProcess
 
 @EnableScheduling
 @SpringBootApplication
-class RoomApplication : CommandLineRunner {
+class PlayApplication : CommandLineRunner {
     private val log = logger()
     override fun run(vararg args: String?) {
         try{
@@ -60,5 +60,5 @@ class RoomApplication : CommandLineRunner {
 }
 
 fun main(args:Array<String>) {
-    runApplication<RoomApplication>(*args)
+    runApplication<PlayApplication>(*args)
 }

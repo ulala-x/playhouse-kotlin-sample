@@ -23,8 +23,6 @@ class SimpleRoom(override val stageSender: StageSender) : Stage<SimpleUser> {
         log.info("count timer:$count")
         count++
     }
-
-
     init {
         packetHandler.add(LeaveRoomReq.getDescriptor().index, LeaveRoomCmd())
         packetHandler.add(ChatMsg.getDescriptor().index, ChatMsgCmd())

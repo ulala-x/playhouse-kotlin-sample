@@ -12,6 +12,16 @@
         <module name="playhouse-test.simpleClient.main" />
         <module name="playhouse-test.simpleSession.main" />
       </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/3.0.6/40ac53fa1e5c53d15c7058603e26dd03a99223ae/spring-boot-configuration-processor-3.0.6.jar" />
+        </processorPath>
+        <module name="playhouse-kotlin-sample.simpleRoom.main" />
+        <module name="playhouse-kotlin-sample.simpleApi.main" />
+        <module name="playhouse-kotlin-sample.simpleClient.main" />
+        <module name="playhouse-kotlin-sample.simpleSession.main" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
   </component>
